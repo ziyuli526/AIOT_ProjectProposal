@@ -14,13 +14,25 @@ def show_daily_analysis(chatbot_instance: Chatbot, current_data: dict):
     """
     右上角「今日分析」按鈕執行的函式
     """
+    remaining = current_data['remaining_ml']
+    
+    # 根據剩餘水量動態給予不同的鼓勵語
+    if remaining <= 0:
+        cheer_msg = "恭喜你！今天的水分目標已經達成囉！ 🎉"
+    elif remaining <= 600:
+        cheer_msg = "繼續保持喔！再喝一兩杯水就達標了！ 💪"
+    elif remaining <= 1500:
+        cheer_msg = "已經喝了不少囉！工作/讀書之餘別忘了多補充水分！ 🍵"
+    else:
+        cheer_msg = "今天喝得有點少喔！趕快先去裝一大杯水吧！ 💧"
+
     analysis_text = (
         f"📊 【今日分析】\n\n"
         f"今日飲水量：{current_data['current_ml']} ml\n"
         f"目標飲水量：{current_data['target_ml']} ml\n"
         f"目前完成 {current_data['percentage']}%\n"
-        f"距離目標還差 {current_data['remaining_ml']} ml\n\n"
-        f"繼續保持喔！再喝兩杯水就達標了！"
+        f"距離目標還差 {remaining} ml\n\n"
+        f"{cheer_msg}"
     )
     chatbot_instance.add_system_message(analysis_text)
 
